@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TodoFlow | Task Manager</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(circle at 25% 30%, #0c0f1c, #07090f);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .box {
+      max-width: 750px;
+      width: 100%;
+      background: rgba(18, 22, 40, 0.7);
+      backdrop-filter: blur(20px);
+      border-radius: 32px;
+      padding: 28px 32px;
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.4);
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff, #a5bbff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .form {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .inputWrap {
+      flex: 2;
+    }
+
+    #taskInput {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(10, 14, 28, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      color: #f3f6ff;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    #taskInput:focus {
+      border-color: #6c8eff;
+      box-shadow: 0 0 0 3px rgba(108, 142, 255, 0.2);
+    }
+
+    .dateWrap {
+      flex: 1;
+      position: relative;
+    }
+
+    #dueDate {
+      width: 100%;
+      padding: 14px 12px;
+      background: rgba(10, 14, 28, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      color: #f3f6ff;
+      font-size: 14px;
+      outline: none;
+    }
+
+    #dueDate::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+    }
+
+    #addBtn {
+      background: linear-gradient(100deg, #6c8eff, #4a6ad8);
+      border: none;
+      border-radius: 40px;
+      padding: 0 28px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-size: 15px;
+    }
+
+    #addBtn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+      box-shadow: 0 10px 20px rgba(76, 106, 224, 0.3);
+    }
+
+    .stats {
+      margin-bottom: 20px;
+    }
+
+    .counts {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #a6b5dd;
+    }
+
+    .barBg {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      height: 6px;
+      overflow: hidden;
+    }
+
+    .barFill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #6c8eff, #9b7eff);
+      border-radius: 20px;
+      transition: width 0.3s ease;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 6px;
+      border-radius: 60px;
+      margin-bottom: 24px;
+    }
+
+    .filterBtn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 8px 0;
+      border-radius: 40px;
+      font-weight: 500;
+      color: #a6b5dd;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 13px;
+    }
+
+    .filterBtn.active {
+      background: #6c8eff;
+      color: white;
+    }
+
+    .list {
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .task {
+      background: rgba(25, 30, 48, 0.6);
+      backdrop-filter: blur(4px);
+      margin-bottom: 12px;
+      border-radius: 20px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.2s;
+      animation: slideIn 0.2s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .check {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      accent-color: #6c8eff;
+    }
+
+    .info {
+      flex: 1;
+    }
+
+    .text {
+      font-size: 15px;
+      font-weight: 500;
+      color: #f0f4ff;
+      word-break: break-word;
+    }
+
+    .date {
+      font-size: 11px;
+      color: #ffffff;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .done .text {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .edit, .del {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: #c7d2fe;
+    }
+
+    .edit:hover {
+      background: #6c8eff;
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .del:hover {
+      background: #ff6b6b;
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 45px 20px;
+      color: #8e9fc7;
+      font-size: 14px;
+    }
+
+    .editInput {
+      background: #1e253f;
+      border: 1px solid #6c8eff;
+      border-radius: 14px;
+      padding: 6px 12px;
+      color: white;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    .list::-webkit-scrollbar {
+      width: 5px;
+    }
+    .list::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+    .list::-webkit-scrollbar-thumb {
+      background: #6c8eff;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 550px) {
+      .box {
+        padding: 20px;
+      }
+      .form {
+        flex-direction: column;
+      }
+      #addBtn {
+        padding: 12px;
+      }
+      .edit, .del {
+        padding: 4px 10px;
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <div class="top">
+    <h1>TASK <span style="color: aqua;">FLOW</span></h1>
+  </div>
+
+  <div class="form">
+    <div class="inputWrap">
+      <input type="text" id="taskInput" placeholder="What needs to be done?" autocomplete="off">
+    </div>
+    <div class="dateWrap">
+      <input type="date" id="dueDate">
+    </div>
+    <button id="addBtn">Add Task</button>
+  </div>
+
+  <div class="stats">
+    <div class="counts">
+      <span>Total: <span id="total">0</span></span>
+      <span>Completed: <span id="done">0</span></span>
+    </div>
+    <div class="barBg">
+      <div class="barFill" id="progress"></div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <button class="filterBtn active" data-filter="all">All</button>
+    <button class="filterBtn" data-filter="pending">Pending</button>
+    <button class="filterBtn" data-filter="completed">Completed</button>
+  </div>
+
+  <div class="list" id="list">
+  </div>
+</div>
+
+<script>
+  let tasks = [];
+  let currentFilter = "all";
+
+  const taskInput = document.getElementById("taskInput");
+  const dueDate = document.getElementById("dueDate");
+  const addBtn = document.getElementById("addBtn");
+  const listEl = document.getElementById("list");
+  const totalSpan = document.getElementById("total");
+  const doneSpan = document.getElementById("done");
+  const progressBar = document.getElementById("progress");
+
+  function save() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }
+
+  function load() {
+    const stored = localStorage.getItem("tasks");
+    if (stored) {
+      tasks = JSON.parse(stored);
+      tasks = tasks.map(t => ({ ...t, dueDate: t.dueDate || "" }));
+    } else {
+      tasks = [];
+    }
+  }
+
+  function updateStats() {
+    const total = tasks.length;
+    const completed = tasks.filter(t => t.completed).length;
+    totalSpan.innerText = total;
+    doneSpan.innerText = completed;
+    const percent = total === 0 ? 0 : (completed / total) * 100;
+    progressBar.style.width = percent + "%";
+  }
+
+  function render() {
+    let filtered = [];
+    if (currentFilter === "all") filtered = [...tasks];
+    else if (currentFilter === "pending") filtered = tasks.filter(t => !t.completed);
+    else filtered = tasks.filter(t => t.completed);
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = `
+        <div class="empty">
+          <p>No tasks here. Create one above!</p>
+        </div>
+      `;
+      return;
+    }
+
+    listEl.innerHTML = "";
+    
+    filtered.forEach(task => {
+      const div = document.createElement("div");
+      div.className = `task ${task.completed ? "done" : ""}`;
+      div.setAttribute("data-id", task.id);
+      
+      let dueHtml = "";
+      if (task.dueDate) {
+        const d = new Date(task.dueDate);
+        const formatted = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+        dueHtml = `<div class="date">📅 ${formatted}</div>`;
+      }
+      
+      div.innerHTML = `
+        <input type="checkbox" class="check" ${task.completed ? "checked" : ""}>
+        <div class="info">
+          <div class="text">${escapeHtml(task.text)}</div>
+          ${dueHtml}
+        </div>
+        <div class="actions">
+          <button class="edit">✏️ Edit</button>
+          <button class="del">🗑️ Delete</button>
+        </div>
+      `;
+      
+      const check = div.querySelector(".check");
+      check.addEventListener("change", (e) => {
+        const t = tasks.find(t => t.id == task.id);
+        if (t) {
+          t.completed = check.checked;
+          save();
+          updateStats();
+          render();
+        }
+      });
+      
+      const editBtn = div.querySelector(".edit");
+      editBtn.addEventListener("click", () => {
+        editTask(div, task.id);
+      });
+      
+      const delBtn = div.querySelector(".del");
+      delBtn.addEventListener("click", () => {
+        tasks = tasks.filter(t => t.id != task.id);
+        save();
+        updateStats();
+        render();
+      });
+      
+      listEl.appendChild(div);
+    });
+  }
+  
+  function escapeHtml(str) {
+    if (!str) return "";
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  function editTask(card, id) {
+    const textDiv = card.querySelector(".text");
+    const oldText = textDiv.innerText;
+    
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = oldText;
+    input.className = "editInput";
+    
+    textDiv.style.display = "none";
+    const infoDiv = card.querySelector(".info");
+    infoDiv.insertBefore(input, textDiv.nextSibling);
+    input.focus();
+    
+    function saveEdit() {
+      const newVal = input.value.trim();
+      if (newVal !== "") {
+        const task = tasks.find(t => t.id == id);
+        if (task) {
+          task.text = newVal;
+          save();
+          updateStats();
+          render();
+        } else {
+          render();
+        }
+      } else {
+        render();
+      }
+    }
+    
+    input.addEventListener("blur", saveEdit);
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        saveEdit();
+      }
+    });
+  }
+
+  function addTask() {
+    const text = taskInput.value.trim();
+    if (text === "") {
+      taskInput.style.borderColor = "#ff6b6b";
+      setTimeout(() => { taskInput.style.borderColor = ""; }, 500);
+      return;
+    }
+    
+    const newTask = {
+      id: Date.now(),
+      text: text,
+      completed: false,
+      dueDate: dueDate.value
+    };
+    
+    tasks.unshift(newTask);
+    save();
+    taskInput.value = "";
+    dueDate.value = "";
+    updateStats();
+    render();
+  }
+
+  function setFilter(type) {
+    currentFilter = type;
+    document.querySelectorAll(".filterBtn").forEach(btn => {
+      if (btn.getAttribute("data-filter") === type) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+    render();
+  }
+
+  addBtn.addEventListener("click", addTask);
+  taskInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") addTask();
+  });
+  
+  document.querySelectorAll(".filterBtn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      setFilter(btn.getAttribute("data-filter"));
+    });
+  });
+  
+  load();
+  updateStats();
+  render();
+</script>
+</body>
+</html>
