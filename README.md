@@ -1,8 +1,9 @@
-# 📝 Todo List Web App
+# 📝 Todo List Web App :-
 
 A modern, responsive, and user-friendly Todo List web application built using HTML, CSS, and JavaScript.
 
-## 🚀 Features
+## 🚀 Features :-
+
 - ➕ Add tasks with date
 - ✅ Mark tasks as completed
 - ❌ Delete tasks
@@ -10,19 +11,23 @@ A modern, responsive, and user-friendly Todo List web application built using HT
 - 🌙 Clean dark-themed UI
 - 📱 Responsive design
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack :- 
+
 - HTML
 - CSS
 - JavaScript
 
-## 💡 How to Use
+## 💡 How to Use :-
+ 
 1. Enter your task
 2. Select a date
 3. Click "Add Task"
 4. Manage tasks easily
 
-## 📂 Project Structure
+## 📂 Project Structure :-
+
 - index.html 
 
-## 📌 Author
+## 📌 Author :-
+
 - Sahil Bulbule
