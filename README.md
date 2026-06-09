@@ -2,7 +2,7 @@
 
 A modern, responsive, and user-friendly Todo List web application built using HTML, CSS, and JavaScript.
 
-## 🚀 Features :-
+## 🚀 Features :- 
  
 - ➕ Add tasks with date 
 - ✅ Mark tasks as completed
