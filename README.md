@@ -4,7 +4,7 @@ A modern, responsive, and user-friendly Todo List web application built using HT
 
 ## 🚀 Features :-
  
-- ➕ Add tasks with date
+- ➕ Add tasks with date 
 - ✅ Mark tasks as completed
 - ❌ Delete tasks 
 - 🔍 Filter tasks (All / Pending / Completed)
