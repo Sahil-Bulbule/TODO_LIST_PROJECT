@@ -9,7 +9,7 @@ A modern, responsive, and user-friendly Todo List web application built using HT
 - ❌ Delete tasks 
 - 🔍 Filter tasks (All / Pending / Completed)
 - 🌙 Clean dark-themed UI
-- 📱 Responsive design
+- 📱 Responsive design 
 
 ## 🛠️ Tech Stack :- 
 
